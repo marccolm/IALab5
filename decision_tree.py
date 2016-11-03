@@ -29,7 +29,7 @@ def get_attribute(input):
 	attributes = attributes.split(",")
 	relation[key] = attributes
 	for (i, attribute) in enumerate(attributes):
-		relation[i] = attribute
+		relation[attribute] = i
 	return relation
 
 
