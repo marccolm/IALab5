@@ -23,6 +23,23 @@ def entropy(s):
 			res -= p * np.log2(p)
 	return res
 
+def information_gain(y, x):
+	#print("Y")
+	#print(y)
+	#print("X")
+	#print(x)
+	res = entropy(y)
+	val, counts = np.unique(x, return_counts=True)
+	freqs = []
+	for count in counts:
+		freq = float(count) / len(x)
+		freqs.append(freq)
+
+	for p, v in zip(freqs, val):
+		res -= p * entropy(y[x == v])
+
+	return res
+
 
 
 def get_instruction(input):
@@ -87,5 +104,3 @@ if __name__ == "__main__":
 	#print(result)
 	result = np.array(result)
 	new_matrix = np.array(new_matrix)
-	
-	
