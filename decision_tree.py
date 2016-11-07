@@ -40,7 +40,32 @@ def information_gain(y, x):
 
 	return res
 
+def is_pure(s):
+	return len(set(s)) == 1
 
+def decision_tree(x, y, n):
+	if is_pure(y) or len(y) == 0:
+		for i in range(n): print(" "),
+		print ("ANSWER: %s" % relation[result_key][y[0]])
+		return
+
+	gain = np.array([information_gain(y, x_attr) for x_attr in x.T])
+	selected_attr = np.argmax(gain)
+
+	if np.all(gain < 1e-6):
+		for i in range(n): print(" "),
+		print ("ANSWER: %s" % relation[result_key][y[0]])
+		return
+
+	sets = partition(x[:, selected_attr])
+
+	for k, v in sets.items():
+		y_subset = y.take(v, axis=0)
+		x_subset = x.take(v, axis=0)
+
+		for i in range(n): print(" "),
+		print("%s: %s" % (keys[selected_attr], relation[keys[selected_attr]][k]))
+		decision_tree(x_subset, y_subset, n+1)
 
 def get_instruction(input):
 	if '%' in input:
@@ -95,12 +120,12 @@ def convert_matrix(matrix, relation):
 if __name__ == "__main__":
 	for line in sys.stdin:
 		get_instruction(line)
-	print(relation)
+	#print(relation)
 	new_matrix = convert_matrix(matrix, relation)
-	new_matrix = new_matrix[:len(new_matrix) - 1]
 	#print(relation)
 	#print(new_matrix)
 	#print("Result")
 	#print(result)
 	result = np.array(result)
 	new_matrix = np.array(new_matrix)
+	decision_tree(new_matrix, result, 0)
